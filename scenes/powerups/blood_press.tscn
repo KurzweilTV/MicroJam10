@@ -1,0 +1,49 @@
+[gd_scene load_steps=3 format=3 uid="uid://csg5k6k8tfkd5"]
+
+[ext_resource type="PackedScene" uid="uid://drbbcok3a1iiu" path="res://scenes/base_powerup.tscn" id="1_xbq3r"]
+
+[sub_resource type="GDScript" id="GDScript_se45l"]
+resource_name = "BloodPress"
+script/source = "extends Powerup
+
+@export var powerup_name: String = \"Improved\\nBlood\\nPress\"
+@export var base_cost: float = 200
+@export var cost_multiplier: float = 2
+
+@onready var button: Button = $MarginContainer/Button
+var powerup_level = 0
+var price: float
+
+func _ready() -> void:
+	price = base_cost
+	set_button_text(button, powerup_name, price)
+
+func _on_button_pressed() -> void:
+	if GameManager and GameManager.attempt_purchase(price):
+		print(\"Purchase Successful\")
+		GameManager.passive_score += 1
+		GameManager.blood_passive_score += 1
+		powerup_level += 1
+		price = increase_price(base_cost, cost_multiplier, powerup_level)
+		set_button_text(button, powerup_name, price)
+	else:
+		print(\"Insufficient Funds\")
+"
+
+[node name="StoreIcon" instance=ExtResource("1_xbq3r")]
+size_flags_horizontal = 3
+script = SubResource("GDScript_se45l")
+powerup_name = "Improved
+Blood
+Press"
+base_cost = 200.0
+cost_multiplier = 2.0
+
+[node name="Button" parent="MarginContainer" index="0"]
+tooltip_text = "Improves the amount of blood you get per human you process"
+text = "Improved
+Blood 
+Press
+B$: 200"
+
+[connection signal="pressed" from="MarginContainer/Button" to="." method="_on_button_pressed"]
