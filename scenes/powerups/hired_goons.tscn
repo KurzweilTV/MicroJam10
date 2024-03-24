@@ -9,42 +9,44 @@ script/source = "extends Powerup
 @export var base_cost: float = 50
 @export var cost_multiplier: float = 1.5
 
-@onready var button: Button = $MarginContainer/Button
+@onready var button: Button = $Button
 var powerup_level = 0
 var price: float
 
 func _ready() -> void:
-	price = base_cost
+	if !price:
+		price = base_cost
+
+func update_button_ui():
 	set_button_text(button, powerup_name, price)
 
 func _on_powerup_button_pressed() -> void:
 	if GameManager and GameManager.attempt_purchase(price):
-		print(\"Purchase Successful\")
 		GameManager.passive_score += 1
 		GameManager.blood_passive_score += 1
 		powerup_level += 1
 		price = increase_price(base_cost, cost_multiplier, powerup_level)
 		set_button_text(button, powerup_name, price)
 	else:
-		print(\"Insufficient Funds\")
+		printerr(\"Insufficient Funds\")
+		spawn_text(\"Insufficient Funds\")
 
 
 "
 
 [node name="HiredGoons" instance=ExtResource("1_xu53i")]
-size_flags_horizontal = 3
 script = SubResource("GDScript_30dy1")
 powerup_name = "Hired
 Goons
 "
 base_cost = 50.0
-cost_multiplier = 1.5
+cost_multiplier = 1.1
 
-[node name="Button" parent="MarginContainer" index="0"]
+[node name="Button" parent="." index="0"]
+custom_minimum_size = Vector2(2.08165e-12, 2.08165e-12)
 tooltip_text = "Increases passive human processing by 1"
 text = "Hired
-Goons
+Goons"
 
-🩸 50"
-
-[connection signal="pressed" from="MarginContainer/Button" to="." method="_on_powerup_button_pressed"]
+[connection signal="pressed" from="Button" to="." method="_on_powerup_button_pressed"]
+[connection signal="timeout" from="Timer" to="." method="update_button_ui"]

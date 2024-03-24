@@ -1,0 +1,115 @@
+[gd_scene load_steps=6 format=3 uid="uid://bbd2mgfhpgk28"]
+
+[sub_resource type="GDScript" id="GDScript_joe3i"]
+resource_name = "FloatingText"
+script/source = "extends Node2D
+
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var label: Label = $Label
+
+var rand_x : float
+var passed_text : String
+
+func _ready() -> void:
+	if passed_text:
+		label.text = passed_text
+	else:
+		var kpc = GameManager.base_click * GameManager.click_multiplier
+		label.text = \"+\" + str(int(kpc))
+	animation_player.play(\"float_up\")
+	move_rand_x()
+
+func move_rand_x() -> void:
+	rand_x = randf_range(-15, 15)
+	var tween = create_tween()
+	tween.tween_property(self, \"position:x\", rand_x, 1.0)
+
+func _on_animation_player_animation_finished(_anim_name: StringName) -> void:
+	queue_free()
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_p7xy6"]
+font_size = 22
+font_color = Color(1, 0.160784, 0.160784, 1)
+outline_size = 7
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 5
+shadow_color = Color(0, 0, 0, 0.247059)
+shadow_offset = Vector2(3.14, 3.08)
+
+[sub_resource type="Animation" id="Animation_y8hgb"]
+resource_name = "float_up"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 0.258816),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(2.08165e-12, -40)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.3, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_4o4ud"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ijxq1"]
+_data = {
+"RESET": SubResource("Animation_4o4ud"),
+"float_up": SubResource("Animation_y8hgb")
+}
+
+[node name="Floatingtext" type="Node2D"]
+script = SubResource("GDScript_joe3i")
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "+ 3"
+label_settings = SubResource("LabelSettings_p7xy6")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ijxq1")
+}
+autoplay = "float_up"
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
