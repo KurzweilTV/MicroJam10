@@ -1,6 +1,5 @@
-[gd_scene load_steps=3 format=3 uid="uid://drbbcok3a1iiu"]
+[gd_scene load_steps=2 format=3 uid="uid://drbbcok3a1iiu"]
 
-[ext_resource type="Theme" uid="uid://c5v7bp7h2x2je" path="res://art/themes/clicker_theme.tres" id="1_84wu6"]
 [ext_resource type="Script" path="res://scripts/powerup.gd" id="1_ogqbe"]
 
 [node name="StoreIcon" type="Control"]
@@ -8,7 +7,6 @@ layout_mode = 3
 anchors_preset = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme = ExtResource("1_84wu6")
 script = ExtResource("1_ogqbe")
 
 [node name="Button" type="Button" parent="."]
@@ -19,7 +17,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_84wu6")
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.2
