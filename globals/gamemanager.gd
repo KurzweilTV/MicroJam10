@@ -1,6 +1,9 @@
 extends Node
 
-var world_population : int = 10000000000
+@export var powerup1 : PackedScene
+
+var first_play : float
+var world_population : int = 8000000000
 
 # kills variables
 var total_score : float
@@ -34,3 +37,19 @@ func attempt_purchase(blood: float) -> bool:
 		return true
 	else:
 		return false
+
+func reset_game():
+
+	# kills variables
+	total_score = 0
+	base_click = 1
+	click_multiplier = 1
+	passive_score = 0
+	passive_multiplier = 1
+
+	# blood variables
+	total_blood = 0
+	blood_base_click = 1
+	blood_click_multiplier = 1
+	blood_passive_score = 0
+	blood_passive_multiplier = 1

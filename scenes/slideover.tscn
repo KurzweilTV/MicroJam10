@@ -1,0 +1,227 @@
+[gd_scene load_steps=8 format=3 uid="uid://cgjk5u52s3w84"]
+
+[ext_resource type="Theme" uid="uid://cjhepd5wbo04k" path="res://art/themes/main.theme" id="1_qpw6r"]
+[ext_resource type="Texture2D" uid="uid://dg3mqwf7fw533" path="res://art/slideover_icon.png" id="2_65j3f"]
+[ext_resource type="Script" path="res://scripts/slideover.gd" id="2_75j1g"]
+[ext_resource type="AudioStream" uid="uid://b5uatdfad1m71" path="res://sounds/maximize_009.ogg" id="4_k8c7v"]
+[ext_resource type="AudioStream" uid="uid://b50ck7y1f8jw5" path="res://sounds/minimize_009.ogg" id="5_rxitc"]
+[ext_resource type="AudioStream" uid="uid://cpjc7mx2y1j0o" path="res://sounds/upgrade.wav" id="6_lbrha"]
+
+[sub_resource type="GDScript" id="GDScript_1o2jj"]
+script/source = "extends ProgressBar
+
+func _ready() -> void:
+	max_value = GameManager.world_population
+
+func update_progress():
+	value = (GameManager.world_population - GameManager.total_score)
+"
+
+[node name="Slideover" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_75j1g")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Background" type="Panel" parent="MarginContainer"]
+layout_mode = 2
+theme = ExtResource("1_qpw6r")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Background/MarginContainer"]
+layout_mode = 2
+
+[node name="Population" type="HBoxContainer" parent="MarginContainer/Background/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TotalPop" type="Label" parent="MarginContainer/Background/MarginContainer/VBoxContainer/Population"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Remaining Population"
+
+[node name="TotalPopNumber" type="Label" parent="MarginContainer/Background/MarginContainer/VBoxContainer/Population"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "8000000000"
+horizontal_alignment = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/Background/MarginContainer/VBoxContainer"]
+layout_mode = 2
+max_value = 8e+09
+step = 2.08165e-12
+script = SubResource("GDScript_1o2jj")
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/Background/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Passive" type="HBoxContainer" parent="MarginContainer/Background/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PKLabel" type="Label" parent="MarginContainer/Background/MarginContainer/VBoxContainer/Passive"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Passive Kills (Goons)"
+
+[node name="PKAmount" type="Label" parent="MarginContainer/Background/MarginContainer/VBoxContainer/Passive"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="PassiveBlood" type="HBoxContainer" parent="MarginContainer/Background/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PBLabel" type="Label" parent="MarginContainer/Background/MarginContainer/VBoxContainer/PassiveBlood"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Passive Blood (Blood Farms)"
+
+[node name="PBAmount" type="Label" parent="MarginContainer/Background/MarginContainer/VBoxContainer/PassiveBlood"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/Background/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PerClick" type="HBoxContainer" parent="MarginContainer/Background/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PerClickLabel" type="Label" parent="MarginContainer/Background/MarginContainer/VBoxContainer/PerClick"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Kills Per Click (Knives)"
+
+[node name="PCAmount" type="Label" parent="MarginContainer/Background/MarginContainer/VBoxContainer/PerClick"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="BloodPerClick" type="HBoxContainer" parent="MarginContainer/Background/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="BloodPerClickLabel" type="Label" parent="MarginContainer/Background/MarginContainer/VBoxContainer/BloodPerClick"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Blood Per Click (Blood Press)"
+
+[node name="BPCAmount" type="Label" parent="MarginContainer/Background/MarginContainer/VBoxContainer/BloodPerClick"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/Background/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/Background/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/bold_font_size = 26
+bbcode_enabled = true
+text = "[b]Hired Goons[/b]
+Increases your passive kills per second
+
+[b]Bigger Knives[/b]
+Kills more humans per click
+
+[b]Blood Press[/b]
+Gives you more blood per kill
+
+[b]Blood Farm[/b]
+Gives you passive blood, without killing any humans
+"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Background/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ResetProgress" type="Button" parent="MarginContainer/Background/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Reset Progress"
+
+[node name="ResetNo" type="Button" parent="MarginContainer/Background/MarginContainer/VBoxContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "No"
+
+[node name="ResetYes" type="Button" parent="MarginContainer/Background/MarginContainer/VBoxContainer/HBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(100, 2.08165e-12)
+layout_mode = 2
+text = "Yes"
+
+[node name="OpenButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = -65.0
+offset_top = 330.0
+offset_right = 19.0
+offset_bottom = 414.0
+focus_mode = 0
+icon = ExtResource("2_65j3f")
+flat = true
+
+[node name="CloseButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 645.0
+offset_top = 415.0
+offset_right = 729.0
+offset_bottom = 499.0
+rotation = -3.14159
+focus_mode = 0
+icon = ExtResource("2_65j3f")
+flat = true
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[node name="Sounds" type="Node" parent="."]
+
+[node name="Open" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource("4_k8c7v")
+volume_db = -5.0
+
+[node name="Close" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource("5_rxitc")
+volume_db = -5.0
+
+[node name="clang" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource("6_lbrha")
+volume_db = -5.0
+
+[connection signal="pressed" from="MarginContainer/Background/MarginContainer/VBoxContainer/HBoxContainer/ResetProgress" to="." method="_on_reset_progress_pressed"]
+[connection signal="pressed" from="MarginContainer/Background/MarginContainer/VBoxContainer/HBoxContainer/ResetNo" to="." method="_on_reset_no_pressed"]
+[connection signal="pressed" from="MarginContainer/Background/MarginContainer/VBoxContainer/HBoxContainer/ResetYes" to="." method="_on_reset_yes_pressed"]
+[connection signal="pressed" from="OpenButton" to="." method="_on_open_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="timeout" from="Timer" to="." method="update_ui"]

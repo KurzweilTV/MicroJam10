@@ -7,7 +7,7 @@ script/source = "extends Powerup
 
 @export var powerup_name: String = \"Hired\\nGoons\\n\"
 @export var base_cost: float = 50
-@export var cost_multiplier: float = 1.5
+@export var cost_multiplier: float = 2
 
 @onready var button: Button = $Button
 var powerup_level = 0
@@ -23,15 +23,20 @@ func update_button_ui():
 func _on_powerup_button_pressed() -> void:
 	if GameManager and GameManager.attempt_purchase(price):
 		GameManager.passive_score += 1
+		GameManager.passive_multiplier *= 1.2
 		GameManager.blood_passive_score += 1
 		powerup_level += 1
 		price = increase_price(base_cost, cost_multiplier, powerup_level)
 		set_button_text(button, powerup_name, price)
+		update_ui.emit()
+		$upgrade.play()
 	else:
 		printerr(\"Insufficient Funds\")
 		spawn_text(\"Insufficient Funds\")
 
-
+func _on_slideover_reset_game() -> void:
+	powerup_level = 0
+	price = base_cost
 "
 
 [node name="HiredGoons" instance=ExtResource("1_xu53i")]

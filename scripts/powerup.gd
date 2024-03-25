@@ -1,5 +1,6 @@
 extends Control
 class_name Powerup
+signal update_ui
 
 func set_button_text(button : Button, powerup_name : String, price : float) -> void:
 	var string_price = short(price)

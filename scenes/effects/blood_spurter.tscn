@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://cuqe6owuma074"]
+
+[node name="BloodSpurter" type="CPUParticles2D"]
+position = Vector2(180, 38.9996)
+emitting = false
+amount = 30
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+emission_shape = 3
+emission_rect_extents = Vector2(130.775, 14.325)
+direction = Vector2(1, -1)
+spread = 180.0
+initial_velocity_min = 338.54
+initial_velocity_max = 411.46
+angular_velocity_min = 97.5
+angular_velocity_max = 562.5
+damping_min = 68.229
+damping_max = 68.229
+angle_min = -45.0
+angle_max = 7.5
+scale_amount_max = 6.21
+color = Color(0.552941, 0, 0, 1)

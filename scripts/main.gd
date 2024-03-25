@@ -8,16 +8,24 @@ extends Control
 @onready var blood_press: Control = $BackgroundColor/Shop/BloodPress
 @onready var blood_farm: Control = $BackgroundColor/Shop/BloodFarm
 @onready var anim_sprite: AnimatedSprite2D = $BackgroundColor/Planet/AnimSprite
+@onready var playtime: Label = $BackgroundColor/Playtime
+@onready var blood_spurter: CPUParticles2D = $BackgroundColor/MurderButton/BloodSpurter
 
+var blood_spurter_scene: PackedScene = preload("res://scenes/effects/blood_spurter.tscn")
 var save_path = "user://score.save"
 
 func _ready() -> void:
 	load_score()
 
+	if GameManager.first_play == null or GameManager.first_play == 0:
+		GameManager.first_play = Time.get_unix_time_from_system()
+
 func update_ui() -> void:
 	kill_counter.text = str(short(round(GameManager.total_score)))
 	blood_counter.text = str(short(round(GameManager.total_blood)))
 	update_planet()
+	playtime.text = seconds_to_human_readable(check_playtime())
+	check_for_win()
 
 func save_score():
 	var data = {
@@ -39,6 +47,7 @@ func save_score():
 		"blood_press_price": blood_press.price,
 		"blood_farm_level": blood_farm.powerup_level,
 		"blood_farm_price": blood_farm.price,
+		"first_play": GameManager.first_play,
 		"timestamp": Time.get_unix_time_from_system(),
 	}
 
@@ -66,6 +75,7 @@ func load_score():
 		GameManager.blood_click_multiplier = data["blood_click_multiplier"]
 		GameManager.blood_passive_score = data["blood_passive_score"]
 		GameManager.blood_passive_multiplier = data["blood_passive_multiplier"]
+		GameManager.first_play = data["first_play"]
 
 		# Load timestamp and calculate offline progress
 		var current_time = Time.get_unix_time_from_system()
@@ -102,13 +112,49 @@ func short(value: float) -> String:
 		value /= 1000.0
 	return "%.1f%s" % [value, units[unit_index]]
 
-
 func play_click_effect() -> void:
 	var spawn : Marker2D = $BackgroundColor/MurderButton/Marker2D
 	var floating_text_scene : PackedScene = preload("res://scenes/effects/floatingtext.tscn")
 	var text_effect := floating_text_scene.instantiate()
 	text_effect.position = spawn.position
 	spawn.add_child(text_effect)
+
+func check_for_win(): #lol this will never run
+	if GameManager.world_population - GameManager.total_score <= 0:
+		$VictoryPanel.show()
+
+func check_playtime() -> int:
+	var now = Time.get_unix_time_from_system()
+	var total_playtime = now - GameManager.first_play
+	return int(total_playtime)
+
+func seconds_to_human_readable(seconds: int) -> String:
+	var days := seconds / 86400
+	seconds %= 86400
+	var hours := seconds / 3600
+	seconds %= 3600
+	var minutes := seconds / 60
+	seconds %= 60
+
+	var result: String = ""
+	if days > 0:
+		result += str(days) + "d "
+	if hours > 0 or days > 0: # Include hours if there are any days
+		result += str(hours) + "h "
+	if minutes > 0 or hours > 0: # Include minutes if there are any hours
+		result += str(minutes) + "m "
+	if seconds > 0 or minutes > 0: # Include seconds if there are any minutes
+		result += str(seconds) + "s"
+
+	return result.strip_edges()
+
+
+func randomized_hit_sound() -> void:
+	var hitsound := $Sounds/Hit
+
+	hitsound.pitch_scale = randf_range(0.6, .65)
+	hitsound.play()
+
 
 func update_planet() -> void: # makes the planet bloodier over time.
 	if GameManager.total_score >= 1000000000:
@@ -119,14 +165,19 @@ func update_planet() -> void: # makes the planet bloodier over time.
 		anim_sprite.play("rotate_lvl2")
 
 
-
 func _on_tick() -> void:
 	clock.text = Time.get_datetime_string_from_system(false, true).replace(" ", "\n")
-	GameManager.add_score(GameManager.passive_score)
-	GameManager.add_blood(GameManager.blood_passive_score)
+	GameManager.add_score(GameManager.passive_score * GameManager.passive_multiplier)
+	GameManager.add_blood(GameManager.blood_passive_score * GameManager.blood_passive_multiplier)
 	update_ui()
 
 func _on_murder_button_pressed() -> void:
+	randomized_hit_sound()
+	var new_blood_spurter = blood_spurter_scene.instantiate()
+	add_child(new_blood_spurter)
+	new_blood_spurter.global_position = blood_spurter.global_position # Adjust position as needed
+	new_blood_spurter.emitting = true
+
 	play_click_effect()
 	GameManager.add_score(GameManager.base_click * GameManager.click_multiplier)
 	GameManager.add_blood(GameManager.blood_base_click * GameManager.blood_click_multiplier)

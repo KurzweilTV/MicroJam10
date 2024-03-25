@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://drbbcok3a1iiu"]
+[gd_scene load_steps=3 format=3 uid="uid://drbbcok3a1iiu"]
 
 [ext_resource type="Script" path="res://scripts/powerup.gd" id="1_ogqbe"]
+[ext_resource type="AudioStream" uid="uid://cpjc7mx2y1j0o" path="res://sounds/upgrade.wav" id="2_kd7rr"]
 
 [node name="StoreIcon" type="Control"]
 layout_mode = 3
@@ -21,3 +22,7 @@ grow_vertical = 2
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.2
 autostart = true
+
+[node name="upgrade" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_kd7rr")
+volume_db = -5.0
